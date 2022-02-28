@@ -1,7 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { getAccessToken } from "services/utils/auth";
 import { store } from "store";
 import ProtectedRoute from "./helpers/ProtectedRoute";
 import { PROTECTED_ROUTES } from "./helpers/protectedRoutes";
@@ -9,8 +8,7 @@ import { PUBLIC_ROUTES } from "./helpers/publicRoutes";
 
 const NotFound = lazy(() => import("containers/exceptions/NotFound"));
 
-const Router: React.FC<{}> = ({}) => {
-  const token = getAccessToken();
+const Router = () => {
   return (
     <>
       <Provider store={store}>

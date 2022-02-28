@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useQuery } from "services/hooks/useQuery";
+import styled from "styled-components";
 
 const BasePagination: React.FC<{ total: number; totalPage: number }> = ({
   total,
@@ -9,7 +9,6 @@ const BasePagination: React.FC<{ total: number; totalPage: number }> = ({
 }) => {
   const query = useQuery();
   const page = Number.parseInt(query.get("page"));
-  const history = useHistory();
   const [activePage, setActivePage] = useState<number>(() => {
     return isNaN(page) || !query.get("page") ? 1 : page;
   });

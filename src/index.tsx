@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Reset } from "reset";
-import { Utility } from "utility";
-import App from "./App";
+import { Reset } from "app/reset";
+import { Utility } from "app/utility";
+import App from "app/App";
 
 ReactDOM.render(
   <React.StrictMode>
