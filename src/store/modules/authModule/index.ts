@@ -2,11 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loginAPI, registerAPI } from "apis/auth";
 import { RegisterPayload } from "apis/auth/type";
 import { setSession } from "services/utils/auth";
-import store from "store";
+import store, { RootState } from "store";
 import { AuthData, LoginForm, ResponseForm } from "./type";
 
 type Reducer = {
   getSuccessLogin: (state: any, action: PayloadAction<ResponseForm>) => void;
+  updateLoginState: (state: any, action: PayloadAction<boolean>) => void;
   getStart: (state: any, action: PayloadAction<Array<any>>) => void;
   getFailure: (state: any, action: PayloadAction<string>) => void;
 };
@@ -16,6 +17,7 @@ const getInitialState = () => {
     isLoading: false,
     error: "",
     data: null,
+    isLoggedIn: false,
   };
 };
 
@@ -30,6 +32,9 @@ const authModule = createSlice<AuthData, Reducer>({
       state.data = action.payload;
       setSession(action.payload);
     },
+    updateLoginState: (state, action) => {
+      state.isLoggedIn = action.payload;
+    },
     getStart: (state) => {
       state.isLoading = true;
       state.error = null;
@@ -40,7 +45,8 @@ const authModule = createSlice<AuthData, Reducer>({
     },
   },
 });
-export const { getSuccessLogin, getStart, getFailure } = authModule.actions;
+export const { getSuccessLogin, getStart, getFailure, updateLoginState } =
+  authModule.actions;
 
 export const authLogin =
   (args: LoginForm, successCallback = null, failureCallback = null) =>
@@ -75,3 +81,4 @@ export const authRegister =
   };
 
 export default authModule;
+export const authModuleSelector = () => (state: RootState) => state.authModule;

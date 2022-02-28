@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useHistory, Link } from "react-router-dom";
-import { PROTECTED_ROUTES } from "router/routes";
+import { Link, useHistory } from "react-router-dom";
+import { PROTECTED_ROUTES } from "router/helpers/protectedRoutes";
 import { validEmail } from "services/utils/validator";
-import { authLogin } from "store/modules/authModule";
+import { authLogin, updateLoginState } from "store/modules/authModule";
 import styled from "styled-components";
 
 enum FIELDS {
@@ -56,8 +56,9 @@ const Login: React.FC<{}> = () => {
           password: data[FIELDS.PASSWORD],
           restaurant: data[FIELDS.RESTAURANT],
         },
-        () => {
+        async () => {
           setSubmiting(false);
+          await dispatch(updateLoginState(true));
           history.push(PROTECTED_ROUTES.home.path);
         },
         (error) => {

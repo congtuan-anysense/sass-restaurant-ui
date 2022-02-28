@@ -7,3 +7,8 @@ export const pValidEmail = (email: string): boolean => {
 export const validEmail = (email) => {
   return pValidEmail(email) || "Email is not valid";
 };
+
+export const validateNumber = (value: string) => {
+  const regex = /^[0-9]+$/;
+  return regex.test(value);
+};

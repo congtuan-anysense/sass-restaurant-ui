@@ -4,6 +4,7 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import authModule from "./authModule";
+import customerModule from "./customerModule";
 
 export type GenericRecuder<T> = {
   getStart: (
@@ -19,8 +20,10 @@ export interface GenericModuleType {
 }
 export const reducers = {
   authModule: authModule.reducer,
+  customerModule: customerModule.reducer,
 };
 
 export const store = configureStore({
   reducer: combineReducers(reducers),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });

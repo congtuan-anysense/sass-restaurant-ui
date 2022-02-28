@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LOGIN_HEADER_KEY } from "config/auth";
-import { BASE_URL } from "config/route";
+import { BASE_URL } from "config/app";
 import { RegisterPayload } from "./type";
 
 export const loginAPI = (

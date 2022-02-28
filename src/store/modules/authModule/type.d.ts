@@ -15,4 +15,9 @@ export type ResponseForm = {
   image: string;
 };
 
-export type AuthData = {};
+export type AuthData = {
+  isLoading: boolean;
+  error: string;
+  data: any;
+  isLoggedIn: boolean;
+};

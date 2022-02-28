@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import { PUBLIC_ROUTES } from "router/routes";
+import { PUBLIC_ROUTES } from "router/helpers/publicRoutes";
 import { validEmail } from "services/utils/validator";
 import { authRegister } from "store/modules/authModule";
 import styled from "styled-components";
