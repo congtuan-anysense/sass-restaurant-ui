@@ -97,7 +97,7 @@ const UpsertCustomer: React.FC<{}> = () => {
     );
   }, []);
 
-  if (id && !data.id) {
+  if (id && !data?.id) {
     return null;
   }
 
