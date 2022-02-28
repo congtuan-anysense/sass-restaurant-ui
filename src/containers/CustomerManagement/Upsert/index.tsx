@@ -1,9 +1,10 @@
+import React, { useCallback, useEffect } from "react";
+import PlusIcon from "assets/images/icons/plus-dark.svg";
 import BreadcrumbsBar from "components/templates/breadcrumbs/BreadcrumbsBar";
 import BaseButton from "components/templates/buttons/BaseButton";
 import InputRadio from "components/templates/inputs/InputRadio";
 import SelectInput from "components/templates/inputs/SelectInput";
 import TextInput from "components/templates/inputs/TextInput";
-import React, { useCallback, useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
@@ -38,9 +39,6 @@ const useageHistoryInitiate = [
 const DEFAULT_CHECKED_GENDER = "male";
 
 const UpsertCustomer: React.FC<{}> = () => {
-  const [usageHistories, setUsageHistories] = useState<Array<UsageHistory>>(
-    useageHistoryInitiate
-  );
   const history = useHistory();
   const dispatch = useDispatch();
   const {
@@ -58,6 +56,7 @@ const UpsertCustomer: React.FC<{}> = () => {
     });
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     if (id) {
       dispatch(
         getCustomer(id, ({ customer: { current } }) => {
@@ -412,7 +411,7 @@ const UpsertCustomer: React.FC<{}> = () => {
             />
           </div>
         </div>
-        {/* <div className="flex mb-30">
+        <div className="flex mb-30">
           <h2 className="text-14 w-150-px">備考</h2>
           <div className="w-full px-20">
             <Controller
@@ -437,7 +436,7 @@ const UpsertCustomer: React.FC<{}> = () => {
         <div className="px-30">
           <h1 className="font-bold mb-30">利用履歴 </h1>
 
-          {usageHistories.map((item: UsageHistory, index) => {
+          {useageHistoryInitiate.map((item: UsageHistory, index) => {
             return (
               <div
                 key={index}
@@ -468,7 +467,7 @@ const UpsertCustomer: React.FC<{}> = () => {
               </div>
             );
           })}
-        </div> */}
+        </div>
         <div className="flex justify-center mt-50">
           <BaseButton
             label="キャンセル"

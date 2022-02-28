@@ -10,7 +10,6 @@ import {
   customerModuleSelector,
   getCustomer,
   resetCurrentCustomer,
-  updateCustomer,
 } from "store/modules/customerModule";
 import { Wrapper } from "./style";
 
@@ -27,7 +26,7 @@ const CustomerDetail: React.FC<{}> = () => {
     return () => {
       dispatch(resetCurrentCustomer());
     };
-  }, []);
+  }, [id]);
 
   return (
     <Wrapper>

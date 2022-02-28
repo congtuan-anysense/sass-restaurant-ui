@@ -29,7 +29,6 @@ const ListCustomers: React.FC<{}> = () => {
 
   const getCustomerList = async () => {
     const page = Number(query.get("page"));
-    console.log(page);
     await dispatch(
       getCustomers({
         page: !isNaN(page) && page > 0 ? page : 1,
