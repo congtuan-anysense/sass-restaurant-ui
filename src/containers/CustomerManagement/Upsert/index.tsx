@@ -56,7 +56,6 @@ const UpsertCustomer: React.FC<{}> = () => {
     });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     if (id) {
       dispatch(
         getCustomer(id, ({ customer: { current } }) => {
@@ -98,7 +97,7 @@ const UpsertCustomer: React.FC<{}> = () => {
     );
   }, []);
 
-  if (id && !data) {
+  if (id && !data.id) {
     return null;
   }
 
