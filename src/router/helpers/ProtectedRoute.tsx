@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AUTHENTICATION_PATH } from "config/route";
+import { AUTHENTICATION_PATH } from "config/app";
 
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import { getAccessToken } from "services/utils/auth";

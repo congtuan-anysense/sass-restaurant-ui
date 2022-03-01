@@ -1,5 +1,5 @@
 import { SESSION_KEY } from "config/app";
-import { LOGIN_HEADER_KEY } from "config/auth";
+import { TENANT_HEADER_KEY } from "config/api";
 
 export const setSession = (data) => {
   localStorage.setItem(SESSION_KEY, JSON.stringify(data));
@@ -21,7 +21,7 @@ export const getHeaders = () => {
       "access-token": session["access-token"],
       uid: session["uid"],
       client: session["client"],
-      [LOGIN_HEADER_KEY]: session[LOGIN_HEADER_KEY],
+      [TENANT_HEADER_KEY]: session[TENANT_HEADER_KEY],
     };
   }
 };

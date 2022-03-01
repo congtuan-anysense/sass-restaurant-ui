@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "config/app";
+import { BASE_URL } from "config/api";
 import { getHeaders } from "services/utils/auth";
 import { ListCustomerPayload } from "./type";
 

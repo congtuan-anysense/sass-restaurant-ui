@@ -1,6 +1,6 @@
 import axios from "axios";
-import { LOGIN_HEADER_KEY } from "config/auth";
-import { BASE_URL } from "config/app";
+import { TENANT_HEADER_KEY } from "config/api";
+import { BASE_URL } from "config/api";
 import { RegisterPayload } from "./type";
 
 export const loginAPI = (
@@ -11,7 +11,7 @@ export const loginAPI = (
   const data = { email, password };
   return axios.post(`${BASE_URL}/users/auth/sign_in`, data, {
     headers: {
-      [LOGIN_HEADER_KEY]: restaurant,
+      [TENANT_HEADER_KEY]: restaurant,
     },
   });
 };
