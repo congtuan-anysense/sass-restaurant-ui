@@ -162,10 +162,7 @@ export const deleteCustomer =
   async (dispatch) => {
     try {
       await dispatch(getStart());
-      const result = await deleteCustomerAPI(id);
-      if (result.data.success) {
-        await dispatch(updateCustomersAfterDelete(id));
-      }
+      await deleteCustomerAPI(id);
       if (successCallback) {
         successCallback(store.getState().customerModule);
       }

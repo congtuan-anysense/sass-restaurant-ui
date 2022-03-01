@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "services/hooks/useQuery";
 import styled from "styled-components";
 
-const BasePagination: React.FC<{ total: number; totalPage: number }> = ({
-  total,
-  totalPage,
-}) => {
+const BasePagination: React.FC<{ totalPage: number }> = ({ totalPage }) => {
   const query = useQuery();
   const page = Number.parseInt(query.get("page"));
   const [activePage, setActivePage] = useState<number>(() => {
     return isNaN(page) || !query.get("page") ? 1 : page;
   });
   useEffect(() => {
-    let page = Number.parseInt(query.get("page"));
-    page = isNaN(page) || !query.get("page") ? 1 : page;
-    setActivePage(page);
-  }, [query.get("page")]);
+    setActivePage(() => {
+      return isNaN(page) || !query.get("page") ? 1 : page;
+    });
+  }, [page]);
+
+  const getPath = useCallback((page) => {
+    const search = window.location.search;
+    if (!search) return `${window.location.pathname}?page=${page}`;
+    if (!search.includes("page="))
+      return `${window.location.pathname}${search}&page=${page}`;
+    const reg = /page=[0-9]*/;
+    const newSearch = search.replace(reg, `page=${page}`);
+    return `${window.location.pathname}${newSearch}`;
+  }, []);
 
   return (
     <Wrapper>
-      <p className="description text-center">全3件中3件表示</p>
+      <p className="description text-center">
+        全{query.get("page") ?? 1}件中{totalPage}件表示
+      </p>
       <div className="flex justify-center mt-15">
         <Link
-          to={`${window.location.pathname}?page=${
-            activePage > 1 ? activePage - 1 : 1
-          }`}
+          to={getPath(activePage > 1 ? activePage - 1 : 1)}
           className="pagination-item decorate-none"
         >
           前
@@ -37,16 +44,14 @@ const BasePagination: React.FC<{ total: number; totalPage: number }> = ({
                 index + 1 === activePage ? "active" : ""
               }`}
               key={index}
-              to={`${window.location.pathname}?page=${index + 1}`}
+              to={getPath(index + 1)}
             >
               {index + 1}
             </Link>
           );
         })}
         <Link
-          to={`${window.location.pathname}?page=${
-            activePage < totalPage ? activePage + 1 : 1
-          }`}
+          to={getPath(activePage < totalPage ? activePage + 1 : 1)}
           className="pagination-item decorate-none"
         >
           次

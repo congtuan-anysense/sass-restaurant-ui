@@ -6,12 +6,13 @@ import SelectInput from "components/templates/inputs/SelectInput";
 import TextInput from "components/templates/inputs/TextInput";
 import BasePagination from "components/templates/pagination/BasePagination";
 import { LIMIT_DEFAULT } from "config/app";
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { PROTECTED_ROUTES } from "router/helpers/protectedRoutes";
 import { useQuery } from "services/hooks/useQuery";
 import { formatYMD } from "services/utils/datetime";
+import { useHistory } from "react-router-dom";
 import {
   customerModuleSelector,
   deleteCustomer,
@@ -22,24 +23,64 @@ const ListCustomers: React.FC<{}> = () => {
   const dispatch = useDispatch();
   const { customer } = useSelector(customerModuleSelector);
   const query = useQuery();
-
+  const history = useHistory();
+  const perPage = query.get("limit") || LIMIT_DEFAULT;
+  const page = Number(query.get("page") ?? 1);
   useEffect(() => {
     getCustomerList();
-  }, [query.get("page")]);
+  }, [page, perPage]);
 
-  const getCustomerList = async () => {
-    const page = Number(query.get("page"));
-    await dispatch(
-      getCustomers({
-        page: !isNaN(page) && page > 0 ? page : 1,
-        limit: LIMIT_DEFAULT,
+  const getCustomerList = () => {
+    let payload = {
+      limit: Number(perPage),
+      ...(page > 0 && { page: page }),
+    };
+    dispatch(getCustomers(payload));
+  };
+
+  const numberOfCustomersOnPage = () => {
+    const { total, limit, page } = customer?.paging;
+    if (total < limit) return total;
+    const records = total - (page - 1) * limit;
+    return records > limit ? limit : records;
+  };
+
+  const getPathWithPageValueDown = (currentPage: number): string => {
+    const search = window.location.search;
+    const newSearch = search.replace(
+      `page=${currentPage}`,
+      `page=${currentPage - 1}`
+    );
+    return window.location.pathname + newSearch;
+  };
+
+  const onDelete = (id: number) => {
+    dispatch(
+      deleteCustomer(id, async () => {
+        if (numberOfCustomersOnPage() === 1) {
+          history.push(getPathWithPageValueDown(page));
+          return;
+        } else {
+          await getCustomerList();
+        }
       })
     );
   };
+  const getPathWithLimitChange = (limit: string): string => {
+    const search = window.location.search;
+    if (!search) {
+      return `${window.location.pathname}?limit=${limit}`;
+    }
+    if (!search.includes("limit=")) {
+      return `${window.location.pathname}${search}&limit=${limit}`;
+    }
+    const newSearch = search.replace(`limit=${perPage}`, `limit=${limit}`);
+    return `${window.location.pathname}${newSearch}`;
+  };
 
-  const onDelete = useCallback((id: number) => {
-    dispatch(deleteCustomer(id));
-  }, []);
+  const handleChangeLimit = (limit: string) => {
+    history.push(getPathWithLimitChange(limit));
+  };
 
   return (
     <Wrapper>
@@ -114,11 +155,22 @@ const ListCustomers: React.FC<{}> = () => {
         <div className="table-section pd-34">
           <div className="header flex justify-between align-center">
             <div className="flex align-center">
-              <p className="text-14 line-height-14 mr-10">全4件中4件表示</p>
+              <p className="text-14 line-height-14 mr-10">
+                全{numberOfCustomersOnPage()}件中
+                {customer?.paging?.total || ""}件表示
+              </p>
               <div className="filter">
-                <select className="px-10 py-5">
-                  <option value="50件">50件</option>
-                  <option value="60件">60件</option>
+                <select
+                  className="px-10 py-5"
+                  onChange={(e) => handleChangeLimit(e.target.value)}
+                  defaultValue={perPage}
+                >
+                  <option value="10">10件</option>
+                  <option value="20">20件</option>
+                  <option value="30">30件</option>
+                  <option value="40">40件</option>
+                  <option value="50">50件</option>
+                  <option value="60">60件</option>
                 </select>
               </div>
             </div>
@@ -190,9 +242,8 @@ const ListCustomers: React.FC<{}> = () => {
         </div>
         <BasePagination
           totalPage={Math.ceil(
-            Number(customer?.paging?.total ?? 0) / LIMIT_DEFAULT
+            Number(customer?.paging?.total ?? 0) / Number(perPage)
           )}
-          total={customer?.paging?.total ?? 0}
         />
       </div>
     </Wrapper>
