@@ -6,7 +6,7 @@ import App from "app/App";
 
 ReactDOM.render(
   <React.StrictMode>
-    <div className="bg-primary">
+    <div>
       <Reset />
       <Utility />
       <App />
