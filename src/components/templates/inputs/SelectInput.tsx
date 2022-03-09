@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useImperativeHandle, useState } from "react";
 import styled from "styled-components";
 import DownIcon from "assets/images/icons/down-dark.svg";
 const SelectInput: React.FC<{
@@ -6,43 +6,61 @@ const SelectInput: React.FC<{
   label?: string;
   className?: string;
   onChange: (e) => void;
-}> = React.memo(({ id, label, onChange, className }) => {
-  const [isShow, setShow] = useState<boolean>(false);
-  const hanldeSelect = () => {
-    console.log("click");
-    setShow(!isShow);
-  };
-  return (
-    <Wrapper className={className}>
-      {label && (
-        <label className="text-14 mb-8" htmlFor={id}>
-          {label}
-        </label>
-      )}
-      <div className="relative">
-        <div
-          className="option flex justify-between"
-          onClick={() => hanldeSelect()}
-          onBlur={() => {
-            console.log("blur");
-            setShow(false);
-          }}
-          tabIndex={0}
-        >
-          <p>全てのタイプ</p>
-          <img src={DownIcon} alt="down-icon" />
-        </div>
-        <div className={`absolute ${!isShow ? "d-none" : ""}`}>
-          <div className="option" tabIndex={0} onMouseDown={() => {}}>
-            個人
+  options?: Array<{ label: string; value: string }>;
+  shared?: any;
+  activeValue?: string;
+}> = React.memo(
+  ({ id, label, onChange, className, options, activeValue, shared }) => {
+    const [isShow, setShow] = useState<boolean>(false);
+    const [selectedValue, setSelectedValue] = useState<string>(activeValue);
+
+    useImperativeHandle(shared, () => ({
+      updateSelectedValue: setSelectedValue,
+    }));
+
+    return (
+      <Wrapper className={className}>
+        {label && (
+          <label className="text-14 mb-8" htmlFor={id}>
+            {label}
+          </label>
+        )}
+        <div className="relative">
+          <div
+            className="option flex justify-between"
+            onClick={() => setShow(!isShow)}
+            onBlur={() => setShow(false)}
+            tabIndex={0}
+          >
+            <p>{selectedValue}</p>
+            <img src={DownIcon} alt="down-icon" />
           </div>
-          <div className="option">団体</div>
-          <div className="option">個人</div>
+          <div
+            className={`absolute ${!isShow ? "d-none" : ""} options-container`}
+          >
+            {options?.map((option, index) => {
+              return (
+                <div
+                  key={index}
+                  className="option"
+                  tabIndex={0}
+                  data-value={option.value}
+                  data-label={option.label}
+                  onMouseDown={(e) => {
+                    onChange(e.target["dataset"]?.value);
+                    setSelectedValue(e.target["dataset"]?.label);
+                  }}
+                >
+                  {option.label}
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </Wrapper>
-  );
-});
+      </Wrapper>
+    );
+  }
+);
 
 const Wrapper = styled.div`
   .option {
@@ -54,6 +72,10 @@ const Wrapper = styled.div`
     box-sizing: border-box;
     border-radius: 3px;
     cursor: pointer;
+  }
+  .options-container {
+    max-height: 277px;
+    overflow: scroll;
   }
 `;
 

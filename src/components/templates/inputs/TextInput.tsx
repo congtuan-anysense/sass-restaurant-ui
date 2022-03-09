@@ -6,7 +6,7 @@ const TextInput: React.FC<{
   className?: string;
   defaultValue?: string;
   disabled?: boolean;
-  onChange: (e) => void;
+  onChange?: (e) => void;
   error?: string;
   value?: string;
   type?: string;

@@ -52,3 +52,10 @@ export type UsageHistory = {
 export type NewCustomerPayload = {
   customer: CustomerAttribute;
 };
+
+export type CustomerFilterType = {
+  name?: string;
+  phone?: string;
+  customerType?: string;
+  customerNumber?: number;
+};

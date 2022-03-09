@@ -124,6 +124,7 @@ const CustomerDetail: React.FC<{}> = () => {
             placeholder="備考、メモ、。。"
             defaultValue={data?.attributes?.remarks}
             onChange={(e) => {}}
+            readOnly
           ></textarea>
         </div>
         <div className="flex mb-30">

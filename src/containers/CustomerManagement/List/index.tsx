@@ -6,18 +6,19 @@ import SelectInput from "components/templates/inputs/SelectInput";
 import TextInput from "components/templates/inputs/TextInput";
 import BasePagination from "components/templates/pagination/BasePagination";
 import { LIMIT_DEFAULT } from "config/app";
-import React, { useEffect } from "react";
+import { CUSTOMER_TYPE } from "config/const";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { PROTECTED_ROUTES } from "router/helpers/protectedRoutes";
 import { useQuery } from "services/hooks/useQuery";
 import { formatYMD } from "services/utils/datetime";
-import { useHistory } from "react-router-dom";
 import {
   customerModuleSelector,
   deleteCustomer,
   getCustomers,
 } from "store/modules/customerModule";
+import { CustomerFilterType } from "store/modules/customerModule/type";
 import { Wrapper } from "./style";
 const ListCustomers: React.FC<{}> = () => {
   const dispatch = useDispatch();
@@ -26,12 +27,14 @@ const ListCustomers: React.FC<{}> = () => {
   const history = useHistory();
   const perPage = query.get("limit") || LIMIT_DEFAULT;
   const page = Number(query.get("page") ?? 1);
+  const [filterData, setFilterData] = useState<CustomerFilterType>({});
   useEffect(() => {
     getCustomerList();
   }, [page, perPage]);
 
   const getCustomerList = () => {
     let payload = {
+      ...filterData,
       limit: Number(perPage),
       ...(page > 0 && { page: page }),
     };
@@ -103,7 +106,10 @@ const ListCustomers: React.FC<{}> = () => {
                 <TextInput
                   label="顧客番号"
                   onChange={(e) => {
-                    console.log(e.target.value);
+                    setFilterData({
+                      ...filterData,
+                      customerNumber: e.target.value,
+                    });
                   }}
                   id="customer-id"
                   className="mb-25 w-300px"
@@ -112,8 +118,9 @@ const ListCustomers: React.FC<{}> = () => {
               <div className="search-box__item">
                 <SelectInput
                   label="顧客タイプ"
-                  onChange={(e) => {
-                    console.log(e.target.value);
+                  options={CUSTOMER_TYPE}
+                  onChange={(value) => {
+                    setFilterData({ ...filterData, customerType: value });
                   }}
                   id="customer-type"
                   className="mb-25"
@@ -123,7 +130,7 @@ const ListCustomers: React.FC<{}> = () => {
                 <TextInput
                   label="氏名"
                   onChange={(e) => {
-                    console.log(e.target.value);
+                    setFilterData({ ...filterData, name: e.target.value });
                   }}
                   id="customer-full-name"
                   className="mb-25 w-300px"
@@ -133,9 +140,10 @@ const ListCustomers: React.FC<{}> = () => {
                 <TextInput
                   label="電話番号"
                   onChange={(e) => {
-                    console.log(e.target.value);
+                    setFilterData({ ...filterData, phone: e.target.value });
                   }}
                   id="customer-phone-number"
+                  type="number"
                   className="mb-25 w-300px"
                 />
               </div>
@@ -147,6 +155,7 @@ const ListCustomers: React.FC<{}> = () => {
                   label="顧客を検索"
                   iconSrc={SearchIcon}
                   background="#FFA300"
+                  onClick={getCustomerList}
                 />
               </div>
             </div>

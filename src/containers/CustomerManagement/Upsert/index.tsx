@@ -1,10 +1,18 @@
-import React, { useCallback, useEffect } from "react";
+import { getPrefecturesAPI, getZipcodeDetailAPI } from "apis/master";
 import PlusIcon from "assets/images/icons/plus-dark.svg";
 import BreadcrumbsBar from "components/templates/breadcrumbs/BreadcrumbsBar";
 import BaseButton from "components/templates/buttons/BaseButton";
 import InputRadio from "components/templates/inputs/InputRadio";
 import SelectInput from "components/templates/inputs/SelectInput";
 import TextInput from "components/templates/inputs/TextInput";
+import { CUSTOMER_TYPE } from "config/const";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
@@ -39,13 +47,15 @@ const useageHistoryInitiate = [
 const DEFAULT_CHECKED_GENDER = "male";
 
 const UpsertCustomer: React.FC<{}> = () => {
+  const [listPrefecture, setListPrefecture] = useState([]);
+  const prefectureRef = useRef(null);
   const history = useHistory();
   const dispatch = useDispatch();
   const {
     customer: { current: data },
   } = useSelector(customerModuleSelector);
   const { id } = useParams();
-  const { control, setValue, handleSubmit, reset } =
+  const { control, setValue, getValues, handleSubmit, reset } =
     useForm<UpsertCustomerFormInputs>({
       mode: "onSubmit",
       reValidateMode: "onChange",
@@ -70,6 +80,18 @@ const UpsertCustomer: React.FC<{}> = () => {
         .getElementById(`customer-gender__${DEFAULT_CHECKED_GENDER}`)
         .click();
     }
+    // get Master data
+    getPrefecturesAPI()
+      .then(({ data: { data } }) => {
+        setListPrefecture(() => {
+          return data?.prefectures.map((prefecture) => ({
+            label: prefecture,
+            value: prefecture,
+          }));
+        });
+      })
+      .catch((error) => console.log(error));
+
     return () => {
       dispatch(resetCurrentCustomer());
     };
@@ -96,6 +118,24 @@ const UpsertCustomer: React.FC<{}> = () => {
       })
     );
   }, []);
+
+  const getZipcodeDetail = () => {
+    const zipcodeId = getValues("postcode");
+    getZipcodeDetailAPI(zipcodeId)
+      .then(({ data: { data } }) => {
+        setValue(FIELDS.PREFECTURE, data.prefecture);
+        prefectureRef.current.updateSelectedValue(data.prefecture);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const customerType = useMemo(() => {
+    if (!id) return "全てのタイプ";
+    for (const type of CUSTOMER_TYPE) {
+      if (type.value === data?.attributes?.customerType) return type.label;
+    }
+    return "全てのタイプ";
+  }, [data]);
 
   if (id && !data?.id) {
     return null;
@@ -125,9 +165,6 @@ const UpsertCustomer: React.FC<{}> = () => {
           <div className="flex w-full">
             <TextInput
               id="customer-id"
-              onChange={(e) => {
-                console.log(e.target.value);
-              }}
               className="w-half px-20"
               value={data?.attributes?.id.toString() ?? "登録後に自動反映"}
               disabled
@@ -203,10 +240,12 @@ const UpsertCustomer: React.FC<{}> = () => {
           <div className="flex w-full">
             <div className="flex justify-between px-20 w-half align-center">
               <SelectInput
-                onChange={(e) => {
-                  console.log(e.target.value);
+                onChange={(value) => {
+                  setValue(FIELDS.TYPE, value);
                 }}
                 id="customer-type"
+                options={CUSTOMER_TYPE}
+                activeValue={customerType}
               />
               <label htmlFor="customer-company-name">会社名</label>
             </div>
@@ -215,10 +254,7 @@ const UpsertCustomer: React.FC<{}> = () => {
               name={FIELDS.COMPANY_NAME}
               defaultValue={data?.attributes?.companyName ?? ""}
               rules={VALIDATIONS[FIELDS.COMPANY_NAME]}
-              render={({
-                field: { value, onChange },
-                fieldState: { error },
-              }) => (
+              render={({ field: { value, onChange } }) => (
                 <TextInput
                   id="customer-company-name"
                   onChange={onChange}
@@ -280,6 +316,7 @@ const UpsertCustomer: React.FC<{}> = () => {
               label="住所検索"
               background="#FFA300"
               className="text-16 address-btn"
+              onClick={getZipcodeDetail}
             />
           </div>
         </div>
@@ -287,10 +324,13 @@ const UpsertCustomer: React.FC<{}> = () => {
           <h2 className="text-14 w-150-px">都道府県</h2>
           <div>
             <SelectInput
-              onChange={(e) => {
-                console.log(e.target.value);
+              onChange={(value) => {
+                setValue(FIELDS.PREFECTURE, value);
               }}
               id="customer-type"
+              activeValue={data.attributes.prefecture || "Select prefecture"}
+              options={listPrefecture}
+              shared={prefectureRef}
             />
           </div>
         </div>
