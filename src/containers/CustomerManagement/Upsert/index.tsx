@@ -328,7 +328,7 @@ const UpsertCustomer: React.FC<{}> = () => {
                 setValue(FIELDS.PREFECTURE, value);
               }}
               id="customer-type"
-              activeValue={data.attributes.prefecture || "Select prefecture"}
+              activeValue={data?.attributes?.prefecture || "Select prefecture"}
               options={listPrefecture}
               shared={prefectureRef}
             />
