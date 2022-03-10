@@ -10,6 +10,10 @@ const UpsertCustomer = lazy(
   () => import("containers/CustomerManagement/Upsert")
 );
 
+const LayoutCreation = lazy(
+  () => import("containers/tableManagement/LayoutCreation")
+);
+
 export const PROTECTED_ROUTES = {
   home: {
     path: "/",
@@ -32,5 +36,10 @@ export const PROTECTED_ROUTES = {
     path: "/customer/edit/:id",
     component: UpsertCustomer,
     pathWithId: pathWithId,
+  },
+  // table layout
+  table_management: {
+    path: "/table-management",
+    component: LayoutCreation,
   },
 };
