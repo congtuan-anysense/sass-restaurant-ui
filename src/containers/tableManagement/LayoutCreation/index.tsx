@@ -70,45 +70,6 @@ const LayoutCreation: React.FC<{}> = ({}) => {
           })}
         </div>
       </div>
-      <div className="table-info">
-        <h1 className="font-bold text-center">TABLE INFORMATION</h1>
-        <div className="form-control">
-          <label htmlFor="name">Table Name</label>
-          <div>
-            <input
-              className="input-control"
-              id="name"
-              type="text"
-              defaultValue="A12"
-            />
-          </div>
-        </div>
-        <div className="form-control">
-          <label htmlFor="name">Type</label>
-          <div>
-            <input
-              className="input-control"
-              type="text"
-              defaultValue="Pentry"
-            />
-          </div>
-        </div>
-        <div className="form-control">
-          <label htmlFor="name">Color</label>
-          <div>
-            <input className="input-control" type="text" defaultValue="Brown" />
-          </div>
-        </div>
-        <div className="form-control">
-          <label htmlFor="name">Maximum size(person)</label>
-          <div>
-            <input className="input-control" type="text" defaultValue="20" />
-          </div>
-        </div>
-        <div className="form-control flex justify-end">
-          <button className="submit-btn">Create</button>
-        </div>
-      </div>
     </Wrapper>
   );
 };
@@ -116,7 +77,6 @@ const LayoutCreation: React.FC<{}> = ({}) => {
 export default LayoutCreation;
 
 const Wrapper = styled.div`
-  background-color: rgb(245, 245, 245);
   .invisible {
     invisible: hidden;
   }
@@ -134,42 +94,6 @@ const Wrapper = styled.div`
       border: 1px solid #ffffff;
       height: 100%;
       border-radius: 4px;
-    }
-  }
-
-  .table-info {
-    background-color: #ffffff;
-    width: 300px;
-    height: auto;
-    border: 1px solid #ffffff;
-    border-top: none;
-    border-right: none;
-    //border-radius: 0 0 0 15px;
-    box-shadow: 0 0 3px 0 rgb(0 0 0 / 6%);
-    padding: 20px;
-  }
-  .form-control {
-    margin: 30px 0;
-    > label {
-      color: #2c3e50;
-      font-weight: bold;
-    }
-    .input-control {
-      border: none;
-      border-bottom: 2px solid #ebebeb;
-      color: #2f3640;
-      padding: 5px 10px;
-      width: -webkit-fill-available;
-    }
-  }
-  .submit-btn {
-    background-color: #273c75;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    color: #fff;
-    &:hover {
-      background-color: #40739e;
     }
   }
 `;

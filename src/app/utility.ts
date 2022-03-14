@@ -33,6 +33,9 @@ export const utility = css`
   .text-16 {
     font-size: 16px;
   }
+  .text-36 {
+    font-size: 36px;
+  }
   .font-400 {
     font-weight: 400;
   }

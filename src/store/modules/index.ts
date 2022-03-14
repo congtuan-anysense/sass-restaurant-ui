@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import authModule from "./authModule";
 import customerModule from "./customerModule";
+import tableModule from "./tableModule";
 
 export type GenericRecuder<T> = {
   getStart: (
@@ -21,6 +22,7 @@ export interface GenericModuleType {
 export const reducers = {
   authModule: authModule.reducer,
   customerModule: customerModule.reducer,
+  tableModule: tableModule.reducer,
 };
 
 export const store = configureStore({

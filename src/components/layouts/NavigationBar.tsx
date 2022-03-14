@@ -89,6 +89,12 @@ const NavigationTree = [
     level: 1,
     hasChildren: true,
   },
+  {
+    title: "Table layout demo",
+    href: PROTECTED_ROUTES.table_management__demo.path,
+    level: 1,
+    hasChildren: true,
+  },
 ];
 
 const NavigationItem: React.FC<{
