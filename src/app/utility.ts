@@ -87,6 +87,10 @@ export const utility = css`
   .d-none {
     display: none;
   }
+  .empty {
+    display: inline-block;
+    background: white;
+  }
   //
   .hover-opacity {
     &:hover {

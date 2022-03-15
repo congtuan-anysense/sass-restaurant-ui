@@ -9,5 +9,6 @@ export type TableType = {
 export type TabelModuleData = {
   isLoading: boolean;
   error: string;
+  isPresent: boolean;
   tables: Array<TableType>;
 };

@@ -3,13 +3,17 @@ import CounterTable from "components/templates/tables/CounterTable";
 import RectangleTable from "components/templates/tables/RectangleTable";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTables, tableModuleSelector } from "store/modules/tableModule";
+import {
+  addTables,
+  tableModuleSelector,
+  updatePresentStatus,
+} from "store/modules/tableModule";
 import styled from "styled-components";
 
 const TableManagement = () => {
   const [isShowCreateModal, setShowCreateModal] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { tables } = useSelector(tableModuleSelector);
+  const { tables, isPresent } = useSelector(tableModuleSelector);
   const handleAddTables = (tabs) => {
     let startPosition = 0;
     let lastId = tables[tables.length - 1].id;
@@ -19,12 +23,16 @@ const TableManagement = () => {
         top: startPosition,
         left: startPosition,
         id: ++lastId,
+        rotate: 0,
       };
       startPosition += 20;
       return res;
     });
     dispatch(addTables(targetTables));
     setShowCreateModal(false);
+  };
+  const togglePresent = () => {
+    dispatch(updatePresentStatus(!isPresent));
   };
   return (
     <Wrapper>
@@ -39,9 +47,9 @@ const TableManagement = () => {
           ＋ テーブル追加
         </button>
       </div>
-      <div className="layout-box">
+      <div className="layout-box" id="table-container">
         {tables.map((table, index) => {
-          switch (table.type) {
+          switch (table?.type) {
             case "rectangle":
               return <RectangleTable {...table} key={index}></RectangleTable>;
             case "counter":
@@ -61,7 +69,10 @@ const TableManagement = () => {
       </div>
       <footer className="footer flex justify-center mt-80">
         <button className="btn-hover mr-15 footer-btn">戻る</button>
-        <button className="btn-hover ml-15 footer-btn">次へ</button>
+        <button className="btn-hover ml-15 mr-15 footer-btn">次へ</button>
+        <button className="btn-hover ml-15 footer-btn" onClick={togglePresent}>
+          プレビュー
+        </button>
       </footer>
     </Wrapper>
   );

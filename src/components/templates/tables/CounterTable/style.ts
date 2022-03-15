@@ -5,8 +5,10 @@ export const Wrapper = styled.div<{
   left: number;
   seat: number;
   rotate: number;
+  isPresent: boolean;
 }>`
-  border: 1px solid #000000;
+  border: ${(props) =>
+    props.isPresent ? "1px solid rgba(255,255,255,0)" : "1px solid #000000"};
   box-sizing: border-box;
   transform: rotate(${(props) => props.rotate}deg);
   position: absolute;
@@ -32,5 +34,25 @@ export const Wrapper = styled.div<{
     border: none;
     border-top: 1px solid #000000;
     box-sizing: border-box;
+  }
+  .action {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+    position: absolute;
+    transform: translate(0, -50%);
+    > img {
+      transform: rotate(${(props) => 360 - props.rotate}deg);
+    }
+  }
+  .rotate {
+    right: 22px;
+    top: 0;
+  }
+  .remove {
+    top: 0;
+    right: -20px;
   }
 `;
