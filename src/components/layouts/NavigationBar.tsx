@@ -55,7 +55,7 @@ const NavigationTree = [
   },
   {
     title: "テーブル管理",
-    href: "/",
+    href: PROTECTED_ROUTES.table_management.path,
     level: 2,
     hasChildren: false,
   },
@@ -80,18 +80,6 @@ const NavigationTree = [
   {
     title: "権限設定",
     href: "/",
-    level: 1,
-    hasChildren: true,
-  },
-  {
-    title: "Table layout",
-    href: PROTECTED_ROUTES.table_management.path,
-    level: 1,
-    hasChildren: true,
-  },
-  {
-    title: "Table layout demo",
-    href: PROTECTED_ROUTES.table_management__demo.path,
     level: 1,
     hasChildren: true,
   },

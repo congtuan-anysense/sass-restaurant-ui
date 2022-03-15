@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { getTablesData, setTablesData } from "services/utils/table";
 import store, { RootState } from "store";
 import { TabelModuleData, TableType } from "./type";
 
 type Reducer = {
-  addTables: (state: any, action: PayloadAction<Array<any>>) => void;
+  addTables: (state: any, action: PayloadAction<Array<TableType>>) => void;
   updateTable: (state: any, action: PayloadAction<TableType>) => void;
   deleteTable: (state: any, action: PayloadAction<number | string>) => void;
+  updateTables: (state: any, action: PayloadAction<Array<TableType>>) => void;
   updatePresentStatus: (state: any, action: PayloadAction<boolean>) => void;
   getStart: (state: any, action: PayloadAction<Array<any>>) => void;
   getFailure: (state: any, action: PayloadAction<string>) => void;
@@ -16,42 +18,7 @@ const getInitialState = () => {
     isLoading: false,
     error: "",
     isPresent: false,
-    tables: [
-      {
-        id: 1,
-        left: 0,
-        top: 20,
-        seat: 5,
-        type: "rectangle",
-        rotate: 0,
-      },
-      {
-        id: 2,
-        left: 400,
-        top: 100,
-        seat: 1,
-        type: "counter",
-        rotate: 0,
-      },
-      // {
-      //   id: 1,
-      //   left: 600,
-      //   top: 100,
-      //   seat: 2,
-      //   type: "rectangle",
-      //   rotate: 0,
-      // },
-      // {
-      //   id: 1,
-      //   left: 800,
-      //   top: 100,
-      //   seat: 2,
-      //   type: "rectangle",
-      //   rotate: 0,
-      // },
-      // { id: 2, left: 15, top: 440, seat: 3, type: "counter", rotate: 0 },
-      // { id: 5, left: 259, top: 545, seat: 2, type: "counter", rotate: 90 },
-    ],
+    tables: getTablesData(),
   };
 };
 
@@ -62,20 +29,26 @@ const tableModule = createSlice<TabelModuleData, Reducer>({
   initialState,
   reducers: {
     addTables: (state, action) => {
-      state.tables = [...state.tables, ...action.payload];
+      const tables = [...state.tables, ...action.payload];
+      state.tables = tables;
     },
     updateTable: (state, action) => {
-      state.tables = state.tables.map((table) => {
+      const tables = state.tables.map((table) => {
         if (table.id === action.payload.id) {
           return action.payload;
         }
         return table;
       });
+      state.tables = tables;
+    },
+    updateTables: (state, action) => {
+      state.tables = action.payload;
     },
     deleteTable: (state, action) => {
-      state.tables = state.tables.filter(
+      const tables = state.tables.filter(
         (table) => table.id !== action.payload
       );
+      state.tables = tables;
     },
     updatePresentStatus: (state, action) => {
       state.isPresent = action.payload;
@@ -97,6 +70,7 @@ export const {
   updateTable,
   deleteTable,
   updatePresentStatus,
+  updateTables,
 } = tableModule.actions;
 
 export const getTablesInformation =
@@ -113,6 +87,23 @@ export const getTablesInformation =
       }
     }
   };
+
+export const updateLocalTablesData = (
+  tables: Array<TableType>,
+  successCallback = null,
+  failureCallback = null
+) => {
+  try {
+    setTablesData(tables);
+    if (successCallback) {
+      successCallback(store.getState().authModule);
+    }
+  } catch (error) {
+    if (failureCallback) {
+      failureCallback(error.response.data);
+    }
+  }
+};
 
 export default tableModule;
 

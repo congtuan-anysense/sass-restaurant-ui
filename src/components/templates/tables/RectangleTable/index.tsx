@@ -15,7 +15,7 @@ const RectangleTable: React.FC<TableType> = (props) => {
     handleRemove,
     handleMouseDown,
     handleMouseUp,
-  } = useTableEvent(props.id, isPresent, "rectangle");
+  } = useTableEvent(props, isPresent);
 
   return (
     <Wrapper
@@ -24,7 +24,7 @@ const RectangleTable: React.FC<TableType> = (props) => {
       onMouseUp={handleMouseUp}
       draggable
       {...props}
-      id={`rectangle__${props.id}`}
+      id={`${props.type}__${props.id}`}
       isPresent={isPresent}
     >
       <div className="face"></div>

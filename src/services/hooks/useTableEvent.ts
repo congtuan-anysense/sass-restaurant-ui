@@ -2,11 +2,10 @@ import { useDispatch } from "react-redux";
 import { deleteTable, updateTable } from "store/modules/tableModule";
 import { TableType } from "store/modules/tableModule/type";
 
-export const useTableEvent = (id: number, isPresent: boolean, type: string) => {
+export const useTableEvent = (table: TableType, isPresent: boolean) => {
   const dispatch = useDispatch();
   const handleMouseUp = (e) => {
     e.preventDefault();
-    console.log("mouse up");
     const container = document.getElementById("table-container");
     container.removeEventListener("mousemove", handleMouseMove);
   };
@@ -27,22 +26,24 @@ export const useTableEvent = (id: number, isPresent: boolean, type: string) => {
   };
 
   const handleMoveAt = (pageX, pageY) => {
-    const table = document.getElementById(`${type}__${id}`);
+    const tableEle = document.getElementById(`${table.type}__${table.id}`);
     const container = document.getElementById("table-container");
     const boundingContainer = container.getBoundingClientRect();
-    const boundingTable = table.getBoundingClientRect();
-    const left = pageX - boundingContainer.left - table.clientWidth / 2;
-    const top = pageY - boundingContainer.top - table.clientHeight / 2;
+    const boundingTable = tableEle.getBoundingClientRect();
+    const left = pageX - boundingContainer.left - tableEle.clientWidth / 2;
+    const top = pageY - boundingContainer.top - tableEle.clientHeight / 2;
     const maxTop = boundingContainer.height - boundingTable.height;
     const maxLeft = boundingContainer.width - boundingTable.width;
-    table.style.left = (left < 0 ? 0 : left > maxLeft ? maxLeft : left) + "px";
-    table.style.top = (top < 0 ? 0 : top > maxTop ? maxTop : top) + "px";
+    const finalLeft = left < 0 ? 0 : left > maxLeft ? maxLeft : left;
+    const finalTop = top < 0 ? 0 : top > maxTop ? maxTop : top;
+    tableEle.style.left = finalLeft + "px";
+    tableEle.style.top = finalTop + "px";
   };
   const handleRotate = (table: TableType) => {
     dispatch(updateTable(table));
   };
   const handleRemove = () => {
-    dispatch(deleteTable(id));
+    dispatch(deleteTable(table.id));
   };
 
   return {

@@ -6,17 +6,19 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTables,
   tableModuleSelector,
+  updateLocalTablesData,
   updatePresentStatus,
+  updateTables,
 } from "store/modules/tableModule";
-import styled from "styled-components";
+import { Wrapper } from "./style";
 
-const TableManagement = () => {
+const LayoutManage = () => {
   const [isShowCreateModal, setShowCreateModal] = useState<boolean>(false);
   const dispatch = useDispatch();
   const { tables, isPresent } = useSelector(tableModuleSelector);
   const handleAddTables = (tabs) => {
     let startPosition = 0;
-    let lastId = tables[tables.length - 1].id;
+    let lastId = tables[tables.length - 1]?.id ?? 1;
     const targetTables = tabs.map((table) => {
       const res = {
         ...table,
@@ -31,8 +33,24 @@ const TableManagement = () => {
     dispatch(addTables(targetTables));
     setShowCreateModal(false);
   };
-  const togglePresent = () => {
-    dispatch(updatePresentStatus(!isPresent));
+  const setPresent = (value = !isPresent) => {
+    dispatch(updatePresentStatus(value));
+  };
+  const handleNext = () => {
+    const tablesData = tables.map((table) => {
+      const tableEle = document.getElementById(`${table.type}__${table.id}`);
+      const tableStyleComputed = getComputedStyle(tableEle);
+      const top = Number(tableStyleComputed.top.split("px")[0]);
+      const left = Number(tableStyleComputed.left.split("px")[0]);
+      return { ...table, top: top, left: left };
+    });
+    updateLocalTablesData(
+      tablesData,
+      () => {
+        dispatch(updateTables(tablesData));
+      },
+      (error) => console.log(error)
+    );
   };
   return (
     <Wrapper>
@@ -68,76 +86,29 @@ const TableManagement = () => {
         )}
       </div>
       <footer className="footer flex justify-center mt-80">
-        <button className="btn-hover mr-15 footer-btn">戻る</button>
-        <button className="btn-hover ml-15 mr-15 footer-btn">次へ</button>
-        <button className="btn-hover ml-15 footer-btn" onClick={togglePresent}>
-          プレビュー
+        <button
+          className="btn-hover mr-15 footer-btn"
+          onClick={() => setPresent(false)}
+        >
+          戻る
         </button>
+        <button
+          className="btn-hover ml-15 mr-15 footer-btn"
+          onClick={handleNext}
+        >
+          次へ
+        </button>
+        {!isPresent && (
+          <button
+            className="btn-hover ml-15 footer-btn"
+            onClick={() => setPresent()}
+          >
+            プレビュー
+          </button>
+        )}
       </footer>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div`
-  position: relative;
-
-  padding: 80px;
-
-  .bd-blue {
-    border: 1px solid #2f80ed;
-  }
-  .bg-none {
-    background: none;
-  }
-  .pd-12 {
-    padding: 12px;
-  }
-  .radius-4 {
-    border-radius: 4px;
-  }
-  .mb-5 {
-    margin-bottom: 5px;
-  }
-  .mr-25 {
-    margin-right: 25px;
-  }
-  .mb-35 {
-    margin-bottom: 35px;
-  }
-  .layout-box {
-    position: relative;
-    overflow: scroll;
-    background: rgba(216, 215, 215, 0.52);
-    border: none;
-    width: 100%;
-    height: auto;
-    min-height: 720px;
-    .payment-box {
-      width: 238px;
-      height: 147px;
-      background: #ffffff;
-      border: 1px solid #000000;
-      box-sizing: border-box;
-      position: absolute;
-      bottom: 15px;
-      left: 15px;
-    }
-  }
-  .footer-btn {
-    width: 100px;
-    border: 1px solid #000000;
-    border-radius: 4px;
-    padding: 10px 0;
-  }
-  .mt-80 {
-    margin-top: 80px;
-  }
-  .btn-hover {
-    &:hover {
-      background: #30336b;
-      color: #ffffff;
-      transform: 0.2s;
-    }
-  }
-`;
-export default TableManagement;
+export default LayoutManage;

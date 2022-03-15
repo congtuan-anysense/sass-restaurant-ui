@@ -15,7 +15,7 @@ const CounterTable: React.FC<TableType> = (props) => {
     handleRemove,
     handleMouseDown,
     handleMouseUp,
-  } = useTableEvent(props.id, isPresent, "counter");
+  } = useTableEvent(props, isPresent);
 
   return (
     <Wrapper
@@ -24,7 +24,7 @@ const CounterTable: React.FC<TableType> = (props) => {
       onMouseUp={handleMouseUp}
       draggable
       {...props}
-      id={`counter__${props.id}`}
+      id={`${props.type}__${props.id}`}
     >
       <div className="seats flex justify-center align-center">
         {Array(props.seat)
