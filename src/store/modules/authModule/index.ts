@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loginAPI, registerAPI } from "apis/auth";
 import { RegisterPayload } from "apis/auth/type";
-import { setSession } from "services/utils/auth";
+import { getSession, setSession } from "services/utils/auth";
 import store, { RootState } from "store";
 import { AuthData, LoginForm, ResponseForm } from "./type";
 
@@ -12,16 +12,12 @@ type Reducer = {
   getFailure: (state: any, action: PayloadAction<string>) => void;
 };
 
-const getInitialState = () => {
-  return {
-    isLoading: false,
-    error: "",
-    data: null,
-    isLoggedIn: false,
-  };
+const initialState = {
+  isLoading: false,
+  error: "",
+  data: getSession(),
+  isLoggedIn: false,
 };
-
-const initialState = getInitialState();
 
 const authModule = createSlice<AuthData, Reducer>({
   name: "auth",
@@ -81,4 +77,4 @@ export const authRegister =
   };
 
 export default authModule;
-export const authModuleSelector = () => (state: RootState) => state.authModule;
+export const authModuleSelector = (state: RootState) => state.authModule;

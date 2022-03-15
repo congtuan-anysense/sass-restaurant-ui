@@ -25,3 +25,4 @@ export const getHeaders = () => {
     };
   }
 };
+export const getSession = () => JSON.parse(localStorage.getItem(SESSION_KEY));

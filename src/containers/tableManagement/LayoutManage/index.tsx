@@ -98,7 +98,7 @@ const LayoutManage = () => {
         >
           次へ
         </button>
-        {!isPresent && (
+        {!isPresent && tables.length > 0 && (
           <button
             className="btn-hover ml-15 footer-btn"
             onClick={() => setPresent()}
