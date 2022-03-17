@@ -1,6 +1,8 @@
 import CreateTableModal from "components/pages/tableManagement/CreateTableModal";
 import CounterTable from "components/templates/tables/CounterTable";
 import RectangleTable from "components/templates/tables/RectangleTable";
+import { INIT_TABLE_ID, TABLE_ADDITION_ID_PREFIX } from "config/const";
+import { MIN_ERROR_TABLE_POSITION } from "config/style";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,20 +20,25 @@ const LayoutManage = () => {
   const { tables, isPresent } = useSelector(tableModuleSelector);
   const handleAddTables = (tabs) => {
     let startPosition = 0;
-    let lastId = tables[tables.length - 1]?.id ?? 1;
+    let lastId = tables[tables.length - 1]?.id ?? INIT_TABLE_ID;
+    let lastIdStr = lastId.toString();
+    if (lastIdStr.includes(TABLE_ADDITION_ID_PREFIX)) {
+      lastId = Number(lastIdStr.split(TABLE_ADDITION_ID_PREFIX)[1]);
+    }
     const targetTables = tabs.map((table) => {
       const res = {
         ...table,
-        top: startPosition,
+        top: startPosition + MIN_ERROR_TABLE_POSITION,
         left: startPosition,
-        id: ++lastId,
+        id: TABLE_ADDITION_ID_PREFIX + ++lastId,
         rotate: 0,
       };
-      startPosition += 20;
+      startPosition += MIN_ERROR_TABLE_POSITION;
       return res;
     });
     dispatch(addTables(targetTables));
     setShowCreateModal(false);
+    setPresent(false);
   };
   const setPresent = (value = !isPresent) => {
     dispatch(updatePresentStatus(value));
