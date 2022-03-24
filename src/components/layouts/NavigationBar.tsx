@@ -83,6 +83,12 @@ const NavigationTree = [
     level: 1,
     hasChildren: true,
   },
+  {
+    title: "Reservation Calendar",
+    href: PROTECTED_ROUTES.reservationCalendar.path,
+    level: 1,
+    hasChildren: false,
+  },
 ];
 
 const NavigationItem: React.FC<{
@@ -111,6 +117,10 @@ const NavigationItemWrapper = styled.div`
   width: 100%;
   border-bottom: 1px solid #c4c4c4;
   border-right: 1px solid #c4c4c4;
+  &:first-child {
+    border-top: 1px solid #c4c4c4;
+  }
+
   padding: 15px 30px;
   display: flex;
   align-items: center;

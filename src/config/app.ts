@@ -4,4 +4,5 @@ export const AUTHENTICATION_PATH = "/login";
 
 export const LOCAL_KEY = {
   TABLE_MANAGE: "table-manage",
+  FLOOR_MANAGE: "floor-manage",
 };

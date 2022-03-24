@@ -33,6 +33,7 @@ const Router = () => {
                     key={key}
                     exact
                     path={PROTECTED_ROUTES[key].path}
+                    layout={PROTECTED_ROUTES[key]?.layout}
                     component={PROTECTED_ROUTES[key].component}
                   />
                 );

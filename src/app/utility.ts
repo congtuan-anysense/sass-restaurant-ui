@@ -33,6 +33,12 @@ export const utility = css`
   .text-16 {
     font-size: 16px;
   }
+  .text-20 {
+    font-size: 20px;
+  }
+  .text-30 {
+    font-size: 30px;
+  }
   .text-36 {
     font-size: 36px;
   }
@@ -206,6 +212,13 @@ export const utility = css`
   }
   .absolute {
     position: absolute;
+  }
+  .fixed {
+    position: fixed;
+  }
+  // border
+  .radius-50 {
+    border-radius: 50%;
   }
 `;
 

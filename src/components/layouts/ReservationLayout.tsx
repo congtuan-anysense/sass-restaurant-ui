@@ -1,12 +1,12 @@
 import React from "react";
-import Header from "./Header";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
+import ReservationHeader from "./headers/ReservationHeader";
 
-const AuthLayout = React.memo(({ children }) => {
+const ReservationLayout = React.memo(({ children }) => {
   return (
     <>
-      <Header />
+      <ReservationHeader />
       <MainWrapper>
         <NavigationBar />
         {children}
@@ -20,4 +20,4 @@ const MainWrapper = styled.div`
   grid-template-columns: 230px 1fr;
 `;
 
-export default AuthLayout;
+export default ReservationLayout;

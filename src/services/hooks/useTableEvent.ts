@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux";
 import { deleteTable, updateTable } from "store/modules/tableModule";
-import { TableType } from "store/modules/tableModule/type";
+import { TablePropsType } from "store/modules/tableModule/type";
 
-export const useTableEvent = (table: TableType, isPresent: boolean) => {
+export const useTableEvent = (table: TablePropsType, isPresent: boolean) => {
   const dispatch = useDispatch();
   const handleMouseUp = (e) => {
     e.preventDefault();
@@ -39,7 +39,7 @@ export const useTableEvent = (table: TableType, isPresent: boolean) => {
     tableEle.style.left = finalLeft + "px";
     tableEle.style.top = finalTop + "px";
   };
-  const handleRotate = (table: TableType) => {
+  const handleRotate = (table: TablePropsType) => {
     dispatch(updateTable(table));
   };
   const handleRemove = () => {

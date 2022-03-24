@@ -9,6 +9,7 @@ export const Wrapper = styled.div<{
 }>`
   border: ${(props) =>
     props.isPresent ? "1px solid rgba(255,255,255,0)" : "1px solid #000000"};
+  border-bottom: none;
   box-sizing: border-box;
   transform: rotate(${(props) => props.rotate}deg);
   position: absolute;
@@ -31,8 +32,7 @@ export const Wrapper = styled.div<{
     width: ${(props) => Math.ceil(props.seat) * 92}px;
     height: 46px;
     background: #ffffff;
-    border: none;
-    border-top: 1px solid #000000;
+    border: 1px solid #000000;
     box-sizing: border-box;
   }
   .action {

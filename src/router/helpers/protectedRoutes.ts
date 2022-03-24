@@ -13,6 +13,11 @@ const UpsertCustomer = lazy(
 const LayoutCreation = lazy(
   () => import("containers/tableManagement/LayoutManage")
 );
+
+const ReservationCalendar = lazy(
+  () => import("containers/reservation/Calendar")
+);
+
 export const PROTECTED_ROUTES = {
   home: {
     path: "/",
@@ -40,5 +45,11 @@ export const PROTECTED_ROUTES = {
   table_management: {
     path: "/table-management",
     component: LayoutCreation,
+  },
+  // reservation
+  reservationCalendar: {
+    path: "/reservation/calendar",
+    component: ReservationCalendar,
+    layout: "reservation",
   },
 };

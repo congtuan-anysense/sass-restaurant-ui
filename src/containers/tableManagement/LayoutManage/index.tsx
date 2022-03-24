@@ -1,12 +1,17 @@
 import CreateTableModal from "components/pages/tableManagement/CreateTableModal";
 import CounterTable from "components/templates/tables/CounterTable";
 import RectangleTable from "components/templates/tables/RectangleTable";
-import { INIT_TABLE_ID, TABLE_ADDITION_ID_PREFIX } from "config/const";
+import {
+  INIT_FLOOR_ID,
+  INIT_TABLE_ID,
+  TABLE_ADDITION_ID_PREFIX,
+} from "config/const";
 import { MIN_ERROR_TABLE_POSITION } from "config/style";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addTables,
+  getFloorDetail,
   tableModuleSelector,
   updateLocalTablesData,
   updatePresentStatus,
@@ -17,7 +22,13 @@ import { Wrapper } from "./style";
 const LayoutManage = () => {
   const [isShowCreateModal, setShowCreateModal] = useState<boolean>(false);
   const dispatch = useDispatch();
-  const { tables, isPresent } = useSelector(tableModuleSelector);
+  const {
+    floor: { tables },
+    isPresent,
+  } = useSelector(tableModuleSelector);
+  useEffect(() => {
+    dispatch(getFloorDetail(INIT_FLOOR_ID));
+  }, []);
   const handleAddTables = (tabs) => {
     let startPosition = 0;
     let lastId = tables[tables.length - 1]?.id ?? INIT_TABLE_ID;
@@ -27,11 +38,14 @@ const LayoutManage = () => {
     }
     const targetTables = tabs.map((table) => {
       const res = {
-        ...table,
-        top: startPosition + MIN_ERROR_TABLE_POSITION,
-        left: startPosition,
-        id: TABLE_ADDITION_ID_PREFIX + ++lastId,
-        rotate: 0,
+        customerCapacity: table.seat,
+        properties: {
+          ...table,
+          top: startPosition + MIN_ERROR_TABLE_POSITION,
+          left: startPosition,
+          id: TABLE_ADDITION_ID_PREFIX + ++lastId,
+          rotate: 0,
+        },
       };
       startPosition += MIN_ERROR_TABLE_POSITION;
       return res;
@@ -44,19 +58,14 @@ const LayoutManage = () => {
     dispatch(updatePresentStatus(value));
   };
   const handleNext = () => {
-    const tablesData = tables.map((table) => {
-      const tableEle = document.getElementById(`${table.type}__${table.id}`);
-      const tableStyleComputed = getComputedStyle(tableEle);
-      const top = Number(tableStyleComputed.top.split("px")[0]);
-      const left = Number(tableStyleComputed.left.split("px")[0]);
-      return { ...table, top: top, left: left };
-    });
-    updateLocalTablesData(
-      tablesData,
-      () => {
-        dispatch(updateTables(tablesData));
-      },
-      (error) => console.log(error)
+    dispatch(
+      updateLocalTablesData(
+        tables,
+        () => {
+          dispatch(updateTables(tables));
+        },
+        (error) => console.log(error)
+      )
     );
   };
   return (
@@ -73,12 +82,20 @@ const LayoutManage = () => {
         </button>
       </div>
       <div className="layout-box" id="table-container">
-        {tables.map((table, index) => {
-          switch (table?.type) {
+        {tables?.map((table, index) => {
+          if (table?._destroy) return null;
+          switch (table?.properties?.type) {
             case "rectangle":
-              return <RectangleTable {...table} key={index}></RectangleTable>;
+              return (
+                <RectangleTable
+                  {...table.properties}
+                  key={index}
+                ></RectangleTable>
+              );
             case "counter":
-              return <CounterTable {...table} key={index}></CounterTable>;
+              return (
+                <CounterTable {...table.properties} key={index}></CounterTable>
+              );
           }
         })}
 

@@ -3,11 +3,11 @@ import { Wrapper } from "./style";
 import { useTableEvent } from "services/hooks/useTableEvent";
 import { useSelector } from "react-redux";
 import { tableModuleSelector } from "store/modules/tableModule";
-import { TableType } from "store/modules/tableModule/type";
+import { TablePropsType } from "store/modules/tableModule/type";
 import RemoveIcon from "assets/images/icons/remove-black.svg";
 import RotateIcon from "assets/images/icons/rotate-black.svg";
 
-const CounterTable: React.FC<TableType> = (props) => {
+const CounterTable: React.FC<TablePropsType> = (props) => {
   const { isPresent } = useSelector(tableModuleSelector);
   const {
     handleDragStart,
@@ -25,6 +25,7 @@ const CounterTable: React.FC<TableType> = (props) => {
       draggable
       {...props}
       id={`${props.type}__${props.id}`}
+      isPresent={isPresent}
     >
       <div className="seats flex justify-center align-center">
         {Array(props.seat)

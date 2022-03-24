@@ -1,10 +1,22 @@
 import { LOCAL_KEY } from "config/app";
-import { TableType } from "store/modules/tableModule/type";
+import { FloorType, TablePropsType } from "store/modules/tableModule/type";
 
-export const getTablesData = (): Array<TableType> => {
+export const getTablesData = (): Array<TablePropsType> => {
   return JSON.parse(localStorage.getItem(LOCAL_KEY.TABLE_MANAGE)) ?? [];
 };
 
-export const setTablesData = (tables: Array<TableType>): void => {
-  localStorage.setItem(LOCAL_KEY.TABLE_MANAGE, JSON.stringify(tables));
+export const getFloorLocalData = (): FloorType => {
+  return (
+    JSON.parse(localStorage.getItem(LOCAL_KEY.FLOOR_MANAGE)) ?? { tables: [] }
+  );
+};
+
+export const setTablesData = (tables: Array<TablePropsType>): void => {
+  const floor = getFloorLocalData();
+  floor.tables = tables;
+  localStorage.setItem(LOCAL_KEY.FLOOR_MANAGE, JSON.stringify(floor));
+};
+
+export const setFloorData = (floor: FloorType): void => {
+  localStorage.setItem(LOCAL_KEY.FLOOR_MANAGE, JSON.stringify(floor));
 };

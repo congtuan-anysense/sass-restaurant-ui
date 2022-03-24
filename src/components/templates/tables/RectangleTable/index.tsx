@@ -4,10 +4,10 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useTableEvent } from "services/hooks/useTableEvent";
 import { tableModuleSelector } from "store/modules/tableModule";
-import { TableType } from "store/modules/tableModule/type";
+import { TablePropsType } from "store/modules/tableModule/type";
 import { Wrapper } from "./style";
 
-const RectangleTable: React.FC<TableType> = (props) => {
+const RectangleTable: React.FC<TablePropsType> = (props) => {
   const { isPresent } = useSelector(tableModuleSelector);
   const {
     handleDragStart,
@@ -16,7 +16,6 @@ const RectangleTable: React.FC<TableType> = (props) => {
     handleMouseDown,
     handleMouseUp,
   } = useTableEvent(props, isPresent);
-
   return (
     <Wrapper
       onDragStart={handleDragStart}

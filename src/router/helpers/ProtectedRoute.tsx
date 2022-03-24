@@ -3,7 +3,8 @@ import { AUTHENTICATION_PATH } from "config/app";
 
 import { Redirect, Route, RouteProps } from "react-router-dom";
 import { getAccessToken } from "services/utils/auth";
-import AuthLayout from "components/layouts/AuthLayout";
+import BaseLayout from "components/layouts/BaseLayout";
+import ReservationLayout from "components/layouts/ReservationLayout";
 
 const ProtectedRoute: React.FC<RouteProps> = ({
   component: Component,
@@ -16,11 +17,22 @@ const ProtectedRoute: React.FC<RouteProps> = ({
   return (
     <Route
       {...rest}
-      render={() => (
-        <AuthLayout>
-          <Component />
-        </AuthLayout>
-      )}
+      render={() => {
+        switch (rest.layout) {
+          case "reservation":
+            return (
+              <ReservationLayout>
+                <Component />
+              </ReservationLayout>
+            );
+          default:
+            return (
+              <BaseLayout>
+                <Component />
+              </BaseLayout>
+            );
+        }
+      }}
     />
   );
 };
