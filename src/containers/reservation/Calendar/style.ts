@@ -25,7 +25,7 @@ export const Wrapper = styled.div<{ duration: number }>`
   .container {
     overflow: scroll;
     height: calc(100% - 20px);
-
+    border: 1px solid #000;
     text-align: center;
     .header {
       display: grid;
@@ -35,20 +35,14 @@ export const Wrapper = styled.div<{ duration: number }>`
           return Array(props.duration).fill("200px").join(" ");
         }};
       .information-header {
-        border-top: 1px solid #000;
-        border-left: 1px solid #000;
         border-bottom: 1px solid #000;
       }
       .time-header {
         height: 50px;
         border-left: 1px solid #7f8fa6;
-        border-top: 1px solid #7f8fa6;
         border-bottom: 1px solid #7f8fa6;
         background-color: #f5f6fa;
         height: 50px;
-      }
-      .time-header.end {
-        border-right: 1px solid #7f8fa6;
       }
     }
     .time {
@@ -71,7 +65,6 @@ export const Wrapper = styled.div<{ duration: number }>`
         }};
       .table {
         padding-left: 10px;
-        border-left: 1px solid #000;
         > div {
           height: 100%;
           padding-right: 10px;
@@ -82,9 +75,6 @@ export const Wrapper = styled.div<{ duration: number }>`
         height: 50px;
         border-left: 1px solid #7f8fa6;
         border-bottom: 1px solid #7f8fa6;
-      }
-      .last-column {
-        border-right: 1px solid #7f8fa6;
       }
     }
   }

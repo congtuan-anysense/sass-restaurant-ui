@@ -1,21 +1,15 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createFloorAPI, getFloorDetailAPI, updateFloorAPI } from "apis/floor";
 import { STATUS_CODE } from "config/api";
-import { FLOOR_INIT, TABLE_ADDITION_ID_PREFIX } from "config/const";
-import {
-  getFloorLocalData,
-  getTablesData,
-  setFloorData,
-  setTablesData,
-} from "services/utils/table";
+import { FLOOR_INIT } from "config/const";
+import { getFloorLocalData, setFloorData } from "services/utils/table";
 import store, { RootState } from "store";
 import {
+  FloorType,
   TabelModuleData,
   TableAttributeType,
   TablePropsType,
-  TableType,
 } from "./type";
-import { FloorType } from "./type";
 
 type Reducer = {
   addTables: (state: any, action: PayloadAction<Array<TablePropsType>>) => void;
