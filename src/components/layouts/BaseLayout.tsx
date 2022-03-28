@@ -1,5 +1,5 @@
 import React from "react";
-import Header from "./Header";
+import Header from "./headers/BaseHeader";
 import NavigationBar from "./NavigationBar";
 import styled from "styled-components";
 

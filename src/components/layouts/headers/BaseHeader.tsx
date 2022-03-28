@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import { authModuleSelector } from "store/modules/authModule";
 import { clearSession } from "services/utils/auth";
 import { PUBLIC_ROUTES } from "router/helpers/publicRoutes";
-const Header: React.FC<{}> = () => {
+const BaseHeader: React.FC<{}> = () => {
   const { data } = useSelector(authModuleSelector);
   const [isShowModal, setShowModal] = useState<boolean>(false);
   const history = useHistory();
@@ -102,4 +102,4 @@ const Wrapper = styled.header`
   }
 `;
 
-export default Header;
+export default BaseHeader;
