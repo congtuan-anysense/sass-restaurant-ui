@@ -1,10 +1,19 @@
+import { EVENT_START_POSITION } from "config/const";
 import styled from "styled-components";
 
 export const Wrapper = styled.div<{ duration: number }>`
   padding: 20px;
+  padding-right: 0;
   width: calc(100vw - 230px);
+  position: relative;
   background: #ffffff;
-  height: calc(100vh - 130px);
+  .loading {
+    width: 100%;
+    height: calc(100vh - 150px);
+    background-color: #ffaf40;
+    z-index: 10;
+    border-radius: 5px;
+  }
   .head {
     height: 50px;
     > div,
@@ -18,7 +27,6 @@ export const Wrapper = styled.div<{ duration: number }>`
       padding: 10px;
     }
     > .right {
-      margin-right: -20px;
       border-top-right-radius: 0;
     }
   }
@@ -38,7 +46,6 @@ export const Wrapper = styled.div<{ duration: number }>`
         border-bottom: 1px solid #000;
       }
       .time-header {
-        height: 50px;
         border-left: 1px solid #7f8fa6;
         border-bottom: 1px solid #7f8fa6;
         background-color: #f5f6fa;
@@ -90,17 +97,18 @@ export const EventWrapper = styled.div<{
   top: number;
   left: number;
   color: number;
+  width: number;
 }>`
   position: absolute;
   height: 50px;
-  width: 200px;
-  top: ${(props) => props.top}px;
-  left: ${(props) => props.left}px;
+  width: ${(props) => props.width}px;
+  top: ${(props) => EVENT_START_POSITION.TOP + props.top}px;
+  left: ${(props) => EVENT_START_POSITION.LEFT + props.left}px;
   background-color: #ffffff;
   padding: 5px;
   border-left: 1px solid #7f8fa6;
   border-bottom: 1px solid #7f8fa6;
-
+  cursor: pointer;
   .core {
     background-color: ${(props) => props.color};
     border-radius: 5px;
@@ -108,5 +116,35 @@ export const EventWrapper = styled.div<{
     height: 40px;
     color: #ffffff;
     line-height: 40px;
+  }
+
+  .tooltip .tooltipContent {
+    line-height: 20px;
+    visibility: hidden;
+    width: fix-content;
+    min-width: 200px;
+    padding: 10px;
+    background-color: #ff7979;
+    color: #fff;
+    border-radius: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 110%;
+    text-align: left;
+  }
+
+  .tooltip .tooltipContent::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 10%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ff7979 transparent transparent transparent;
+  }
+
+  .tooltip:hover .tooltipContent {
+    visibility: visible;
   }
 `;

@@ -42,5 +42,6 @@ export interface TabelModuleData {
   isLoading: boolean;
   error: string;
   isPresent: boolean;
-  floor: interface;
+  floor: any;
+  tables: any;
 }

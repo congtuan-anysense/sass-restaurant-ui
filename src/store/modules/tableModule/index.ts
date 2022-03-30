@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createFloorAPI, getFloorDetailAPI, updateFloorAPI } from "apis/floor";
+import { createFloorAPI, getFloorDetailAPI, updateFloorAPI } from "apis/floors";
+import { getAllTablesAPI } from "apis/reservations";
 import { STATUS_CODE } from "config/api";
 import { FLOOR_INIT } from "config/const";
 import { getFloorLocalData, setFloorData } from "services/utils/table";
@@ -20,21 +21,19 @@ type Reducer = {
     state: any,
     action: PayloadAction<Array<TablePropsType>>
   ) => void;
+  updateListTables: (state: any, action: PayloadAction<Array<any>>) => void;
   updatePresentStatus: (state: any, action: PayloadAction<boolean>) => void;
   getStart: (state: any, action: PayloadAction<Array<any>>) => void;
   getFailure: (state: any, action: PayloadAction<string>) => void;
 };
 
-const getInitialState = () => {
-  return {
-    isLoading: false,
-    error: "",
-    isPresent: false,
-    floor: getFloorLocalData(),
-  };
+const initialState = {
+  isLoading: false,
+  error: "",
+  isPresent: false,
+  floor: getFloorLocalData(),
+  tables: [],
 };
-
-const initialState = getInitialState();
 
 const tableModule = createSlice<TabelModuleData, Reducer>({
   name: "table",
@@ -64,6 +63,9 @@ const tableModule = createSlice<TabelModuleData, Reducer>({
     },
     updateTables: (state, action) => {
       state.floor.tables = action.payload;
+    },
+    updateListTables: (state, action) => {
+      state.tables = action.payload;
     },
     deleteTable: (state, action) => {
       const tables = state.floor.tables.map((table) => {
@@ -95,6 +97,7 @@ export const {
   deleteTable,
   updatePresentStatus,
   updateTables,
+  updateListTables,
   updateFloor,
 } = tableModule.actions;
 
@@ -197,6 +200,26 @@ export const getFloorDetail =
             }
           }
         }
+      }
+    }
+  };
+
+export const getListTables =
+  (successCallback = null, failureCallback = null) =>
+  async (dispatch) => {
+    try {
+      const {
+        data: {
+          data: { tables },
+        },
+      } = await getAllTablesAPI();
+      dispatch(updateListTables(tables));
+      if (successCallback) {
+        successCallback(store.getState().authModule);
+      }
+    } catch (error) {
+      if (failureCallback) {
+        failureCallback(error.response.data);
       }
     }
   };

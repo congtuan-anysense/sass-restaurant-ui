@@ -6,6 +6,7 @@ import {
 import authModule from "./authModule";
 import customerModule from "./customerModule";
 import tableModule from "./tableModule";
+import reservationModule from "./reservationModule";
 
 export type GenericRecuder<T> = {
   getStart: (
@@ -23,6 +24,7 @@ export const reducers = {
   authModule: authModule.reducer,
   customerModule: customerModule.reducer,
   tableModule: tableModule.reducer,
+  reservationModule: reservationModule.reducer,
 };
 
 export const store = configureStore({
