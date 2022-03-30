@@ -8,6 +8,7 @@ import {
 import {
   getReservations,
   reservationModuleSelector,
+  updateRefresh,
 } from "store/modules/reservationModule";
 import { useDispatch, useSelector } from "react-redux";
 import BaseLoading from "components/templates/loading/BaseLoading";
@@ -16,19 +17,23 @@ import { getListTables, tableModuleSelector } from "store/modules/tableModule";
 const { endTime, startTime } = CALENDAR_DUMMY_DATA;
 const ReservationCalendar: React.FC<{}> = ({}) => {
   const [activeLine, setActiveLine] = useState({ type: "", index: -1 });
-  const { reservations } = useSelector(reservationModuleSelector);
+  const { reservations, isRefresh } = useSelector(reservationModuleSelector);
   const [isLoaded, setLoaded] = useState<boolean>(false);
   const [events, setEvents] = useState<any>([]);
   const { tables } = useSelector(tableModuleSelector);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    mount();
-  }, []);
+    if (isRefresh) {
+      mount();
+      dispatch(updateRefresh(false));
+    } else {
+      setLoaded(false);
+    }
+  }, [isRefresh]);
 
   useEffect(() => {
     if (isLoaded) {
-      const tablesX = CALENDAR_DUMMY_DATA.tables;
       const config = {
         startTime: 15,
         endTime: 23,
@@ -37,6 +42,12 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
       setEvents(events);
     }
   }, [isLoaded]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(updateRefresh(true));
+    };
+  }, []);
 
   const mount = async () => {
     const promises = [];

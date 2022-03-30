@@ -123,6 +123,15 @@ export const updateLocalTablesData =
     failureCallback = null
   ) =>
   async (dispatch) => {
+    const handleUpdateFloor = (floor) => {
+      floor.tables = floor.tables.map((table) => {
+        table.attributes.properties = JSON.parse(table.attributes.properties);
+        table.attributes.properties.id = table.id;
+        return table.attributes;
+      });
+      dispatch(updateFloor(floor));
+      setFloorData(floor);
+    };
     try {
       const tablesData = tables
         .filter((table) => !(!table.id && table._destroy))
@@ -131,6 +140,7 @@ export const updateLocalTablesData =
           const tableEle = document.getElementById(
             `${properties.type}__${properties.id}`
           );
+          if (!tableEle) return { ...table, deleted: true };
           const tableStyleComputed = getComputedStyle(tableEle);
           const top = Number(tableStyleComputed.top.split("px")[0]);
           const left = Number(tableStyleComputed.left.split("px")[0]);
@@ -154,13 +164,17 @@ export const updateLocalTablesData =
         },
       };
 
-      updateFloorAPI(floor.id, payload);
+      const {
+        data: { data },
+      } = await updateFloorAPI(floor.id, payload);
+      handleUpdateFloor(data);
       if (successCallback) {
         successCallback(store.getState().authModule);
       }
     } catch (error) {
       if (failureCallback) {
-        failureCallback(error.response.data);
+        failureCallback(error);
+        console.log(error);
       }
     }
   };
@@ -177,27 +191,26 @@ export const getFloorDetail =
       dispatch(updateFloor(floor));
       setFloorData(floor);
     };
-    {
-      try {
-        const {
-          data: { data },
-        } = await getFloorDetailAPI(id);
-        handleUpdateFloor(data);
-        if (successCallback) {
-          successCallback(store.getState().authModule);
-        }
-      } catch (errorDetail) {
-        if (errorDetail.response.data.code === STATUS_CODE.NOT_FOUND) {
-          try {
-            const payload = { floor: FLOOR_INIT };
-            const {
-              data: { data },
-            } = await createFloorAPI(payload);
-            handleUpdateFloor(data);
-          } catch (errorCreation) {
-            if (failureCallback) {
-              failureCallback(errorCreation.response.data);
-            }
+
+    try {
+      const {
+        data: { data },
+      } = await getFloorDetailAPI(id);
+      handleUpdateFloor(data);
+      if (successCallback) {
+        successCallback(store.getState().authModule);
+      }
+    } catch (errorDetail) {
+      if (errorDetail.response.data.code === STATUS_CODE.NOT_FOUND) {
+        try {
+          const payload = { floor: FLOOR_INIT };
+          const {
+            data: { data },
+          } = await createFloorAPI(payload);
+          handleUpdateFloor(data);
+        } catch (errorCreation) {
+          if (failureCallback) {
+            failureCallback(errorCreation.response.data);
           }
         }
       }

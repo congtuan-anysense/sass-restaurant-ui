@@ -58,15 +58,7 @@ const LayoutManage = () => {
     dispatch(updatePresentStatus(value));
   };
   const handleNext = () => {
-    dispatch(
-      updateLocalTablesData(
-        tables,
-        () => {
-          dispatch(updateTables(tables));
-        },
-        (error) => console.log(error)
-      )
-    );
+    dispatch(updateLocalTablesData(tables));
   };
   return (
     <Wrapper>

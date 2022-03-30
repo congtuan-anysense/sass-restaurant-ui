@@ -1,20 +1,15 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import DownIcon from "assets/images/icons/down.svg";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { authModuleSelector } from "store/modules/authModule";
-import { clearSession } from "services/utils/auth";
-import { PUBLIC_ROUTES } from "router/helpers/publicRoutes";
 import RefreshIcon from "assets/images/icons/refresh.png";
+import React, { useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { authModuleSelector } from "store/modules/authModule";
+import { updateRefresh } from "store/modules/reservationModule";
+import styled from "styled-components";
 const ReservationHeader: React.FC<{}> = () => {
   const { data } = useSelector(authModuleSelector);
-  const [isShowModal, setShowModal] = useState<boolean>(false);
-  const history = useHistory();
-  const handleLogout = () => {
-    clearSession();
-    history.push(PUBLIC_ROUTES.login);
-  };
+  const dispatch = useDispatch();
+  const handleRefreshReservations = useCallback(() => {
+    dispatch(updateRefresh(true));
+  }, []);
   return (
     <Wrapper className="flex justify-between">
       <div className="flex justify-center align-center">
@@ -22,7 +17,10 @@ const ReservationHeader: React.FC<{}> = () => {
       </div>
       <div className="flex">
         <div className="refresh">
-          <button className="flex justify-center align-center refresh-button">
+          <button
+            className="flex justify-center align-center refresh-button"
+            onClick={handleRefreshReservations}
+          >
             <img
               src={RefreshIcon}
               className="radius-50 mr-5"

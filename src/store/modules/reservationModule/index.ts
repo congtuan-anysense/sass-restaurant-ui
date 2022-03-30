@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getReservationsAPI } from "apis/reservations";
-import { getDateTimeInformation } from "services/utils/datetime";
 import store, { RootState } from "store";
 import { ReservationModuleData } from "./type";
 
 type Reducer = {
   updateReservations: (state: any, action: PayloadAction<any>) => void;
+  updateRefresh: (state: any, action: PayloadAction<any>) => void;
   getStart: (state: any, action: PayloadAction<Array<any>>) => void;
   getFailure: (state: any, action: PayloadAction<string>) => void;
 };
@@ -13,6 +13,7 @@ type Reducer = {
 const initialState = {
   isLoading: false,
   error: "",
+  isRefresh: true,
   reservations: [],
 };
 
@@ -22,6 +23,11 @@ const reservationModule = createSlice<ReservationModuleData, Reducer>({
   reducers: {
     updateReservations: (state, action) => {
       state.reservations = action.payload;
+      state.isLoading = true;
+      state.error = null;
+    },
+    updateRefresh: (state, action) => {
+      state.isRefresh = action.payload;
       state.isLoading = true;
       state.error = null;
     },
@@ -35,7 +41,7 @@ const reservationModule = createSlice<ReservationModuleData, Reducer>({
     },
   },
 });
-export const { getStart, getFailure, updateReservations } =
+export const { getStart, getFailure, updateReservations, updateRefresh } =
   reservationModule.actions;
 
 export const getReservations =

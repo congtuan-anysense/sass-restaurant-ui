@@ -24,6 +24,7 @@ export interface TableAttributeType {
   createdAt?: string;
   updatedAt?: string;
   _destroy?: boolean;
+  deleted?: boolean;
 }
 export interface TableType {
   id: number;
