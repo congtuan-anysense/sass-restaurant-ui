@@ -115,8 +115,7 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
           <div className="container relative">
             <div className="header">
               <div className="information-header">
-                <div>information: 1A 2B</div>
-                <div>information: 3C 4D</div>
+                <div>information Hardcode</div>
               </div>
               {Array(setting?.endTime - setting?.startTime + 1)
                 .fill("")

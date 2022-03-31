@@ -151,7 +151,7 @@ const UpsertCustomer: React.FC<{}> = () => {
         categoryTree={[
           {
             title: "顧客管理",
-            href: "/customer-management",
+            href: "/",
           },
           {
             title: "顧客登録",
