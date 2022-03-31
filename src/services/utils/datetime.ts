@@ -4,7 +4,7 @@ export const formatYMD = (dateStr: string): string => {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
-export const getDateTimeInformation = (str: string) => {
+export const getDateTimeFormatFromStr = (str: string) => {
   const regex =
     /[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{3}(\+[0-9]{2}:[0-9]{2})?Z?/;
   if (regex.test(str)) {

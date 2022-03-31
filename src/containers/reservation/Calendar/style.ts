@@ -72,6 +72,8 @@ export const Wrapper = styled.div<{ duration: number }>`
         }};
       .table {
         padding-left: 10px;
+        z-index: 100;
+        background-color: #fff;
         > div {
           height: 100%;
           padding-right: 10px;

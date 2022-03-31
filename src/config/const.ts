@@ -73,7 +73,7 @@ export const CALENDAR_DUMMY_DATA = {
       guests: 3,
     },
   ],
-  startTime: 15,
+  startTime: 0,
   endTime: 23,
   tables: [
     {

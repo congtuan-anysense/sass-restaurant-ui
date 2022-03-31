@@ -6,6 +6,7 @@ import { ReservationModuleData } from "./type";
 type Reducer = {
   updateReservations: (state: any, action: PayloadAction<any>) => void;
   updateRefresh: (state: any, action: PayloadAction<any>) => void;
+  updateActiveDate: (state: any, action: PayloadAction<Date>) => void;
   getStart: (state: any, action: PayloadAction<Array<any>>) => void;
   getFailure: (state: any, action: PayloadAction<string>) => void;
 };
@@ -14,6 +15,7 @@ const initialState = {
   isLoading: false,
   error: "",
   isRefresh: true,
+  activeDate: new Date(),
   reservations: [],
 };
 
@@ -31,6 +33,11 @@ const reservationModule = createSlice<ReservationModuleData, Reducer>({
       state.isLoading = true;
       state.error = null;
     },
+    updateActiveDate: (state, action) => {
+      state.activeDate = action.payload;
+      state.isLoading = true;
+      state.error = null;
+    },
     getStart: (state) => {
       state.isLoading = true;
       state.error = null;
@@ -41,11 +48,16 @@ const reservationModule = createSlice<ReservationModuleData, Reducer>({
     },
   },
 });
-export const { getStart, getFailure, updateReservations, updateRefresh } =
-  reservationModule.actions;
+export const {
+  getStart,
+  getFailure,
+  updateReservations,
+  updateRefresh,
+  updateActiveDate,
+} = reservationModule.actions;
 
 export const getReservations =
-  (date: string = null, successCallback = null, failureCallback = null) =>
+  (date: Date = null, successCallback = null, failureCallback = null) =>
   async (dispatch) => {
     try {
       await dispatch(getStart());
@@ -53,7 +65,7 @@ export const getReservations =
         data: {
           data: { reservations: reservations },
         },
-      } = await getReservationsAPI();
+      } = await getReservationsAPI(date);
       dispatch(updateReservations(reservations));
       if (successCallback) {
         successCallback(store.getState().authModule);

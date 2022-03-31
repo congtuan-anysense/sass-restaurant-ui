@@ -1,6 +1,6 @@
 import { LOCAL_KEY } from "config/app";
 import { FloorType, TablePropsType } from "store/modules/tableModule/type";
-import { getDateTimeInformation } from "./datetime";
+import { getDateTimeFormatFromStr } from "./datetime";
 
 export const getTablesData = (): Array<TablePropsType> => {
   return JSON.parse(localStorage.getItem(LOCAL_KEY.TABLE_MANAGE)) ?? [];

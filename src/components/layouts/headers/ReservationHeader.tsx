@@ -1,15 +1,35 @@
 import RefreshIcon from "assets/images/icons/refresh.png";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authModuleSelector } from "store/modules/authModule";
-import { updateRefresh } from "store/modules/reservationModule";
+import {
+  reservationModuleSelector,
+  updateActiveDate,
+  updateRefresh,
+} from "store/modules/reservationModule";
 import styled from "styled-components";
 const ReservationHeader: React.FC<{}> = () => {
   const { data } = useSelector(authModuleSelector);
+  const { activeDate } = useSelector(reservationModuleSelector);
   const dispatch = useDispatch();
+  const isLoaded = useRef(false);
+  useEffect(() => {
+    if (isLoaded.current) {
+      dispatch(updateRefresh(true));
+    } else {
+      isLoaded.current = true;
+    }
+  }, [activeDate]);
+
   const handleRefreshReservations = useCallback(() => {
     dispatch(updateRefresh(true));
   }, []);
+
+  const switchDate = useCallback((value) => {
+    const date = activeDate.setDate(activeDate.getDate() + value);
+    dispatch(updateActiveDate(new Date(date)));
+  }, []);
+
   return (
     <Wrapper className="flex justify-between">
       <div className="flex justify-center align-center">
@@ -33,12 +53,15 @@ const ReservationHeader: React.FC<{}> = () => {
         </div>
         <div className="date flex align-center">
           <div>
-            <button>{"<"}</button>
+            <button onClick={() => switchDate(-1)}>{"<"}</button>
           </div>
-          <div>2022年1月1日</div>
+          <div>
+            {activeDate.getFullYear()}年{activeDate.getMonth() + 1}月
+            {activeDate.getDate()}日
+          </div>
           <div>すべて</div>
           <div>
-            <button>{">"}</button>
+            <button onClick={() => switchDate(1)}>{">"}</button>
           </div>
         </div>
       </div>

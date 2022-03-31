@@ -1,26 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { EventWrapper, Wrapper } from "./style";
-import {
-  CALENDAR_DUMMY_DATA,
-  CALENDAR_SPACE,
-  EVENT_START_POSITION,
-} from "config/const";
+import BaseLoading from "components/templates/loading/BaseLoading";
+import { CALENDAR_SPACE } from "config/const";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getDateTimeFormatFromStr } from "services/utils/datetime";
 import {
   getReservations,
   reservationModuleSelector,
   updateRefresh,
 } from "store/modules/reservationModule";
-import { useDispatch, useSelector } from "react-redux";
-import BaseLoading from "components/templates/loading/BaseLoading";
-import { getDateTimeInformation } from "services/utils/datetime";
+import {
+  getRestaurantSetting,
+  settingModuleSelector,
+} from "store/modules/settingModule";
 import { getListTables, tableModuleSelector } from "store/modules/tableModule";
-const { endTime, startTime } = CALENDAR_DUMMY_DATA;
+import { EventWrapper, Wrapper } from "./style";
 const ReservationCalendar: React.FC<{}> = ({}) => {
   const [activeLine, setActiveLine] = useState({ type: "", index: -1 });
-  const { reservations, isRefresh } = useSelector(reservationModuleSelector);
+  const { reservations, isRefresh, activeDate } = useSelector(
+    reservationModuleSelector
+  );
+  const isFirstLoad = useRef(true);
   const [isLoaded, setLoaded] = useState<boolean>(false);
   const [events, setEvents] = useState<any>([]);
   const { tables } = useSelector(tableModuleSelector);
+  const { setting } = useSelector(settingModuleSelector);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,11 +37,7 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
 
   useEffect(() => {
     if (isLoaded) {
-      const config = {
-        startTime: 15,
-        endTime: 23,
-      };
-      const events = formatReservation(reservations, config, tables);
+      const events = formatReservation(reservations, setting, tables);
       setEvents(events);
     }
   }, [isLoaded]);
@@ -51,8 +50,12 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
 
   const mount = async () => {
     const promises = [];
-    promises.push(dispatch(getReservations()));
-    promises.push(dispatch(getListTables()));
+    promises.push(dispatch(getReservations(activeDate)));
+    if (isFirstLoad.current) {
+      promises.push(dispatch(getListTables()));
+      promises.push(dispatch(getRestaurantSetting()));
+      isFirstLoad.current = false;
+    }
     await Promise.all(promises);
     setLoaded(true);
   };
@@ -69,13 +72,13 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
 
     const tableIndexs = tables.map((table) => table.id);
     return reservations.map((reservation) => {
-      const startTime = getDateTimeInformation(
+      const startTime = getDateTimeFormatFromStr(
         reservation.attributes.startTime
       );
-      const endTime = getDateTimeInformation(reservation.attributes.endTime);
+      const endTime = getDateTimeFormatFromStr(reservation.attributes.endTime);
       const result = {
         ...reservation.attributes,
-        left: getLeftValue(startTime, config.startTime),
+        left: getLeftValue(startTime, Number(config.openHours.split(":")[0])),
         width: getWidthValue(startTime, endTime),
         color: getRandomColor(),
         top:
@@ -96,12 +99,9 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
     return "";
   };
 
-  const handleShowToolTip = (e) => {
-    console.log(e);
-  };
   return (
     <div>
-      <Wrapper duration={endTime - startTime + 1}>
+      <Wrapper duration={setting?.endTime - setting?.startTime + 1}>
         <div className="head flex justify-between">
           <div className="left">なにか</div>
           <div className="right">リスト予約</div>
@@ -118,7 +118,7 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
                 <div>information: 1A 2B</div>
                 <div>information: 3C 4D</div>
               </div>
-              {Array(endTime - startTime + 1)
+              {Array(setting?.endTime - setting?.startTime + 1)
                 .fill("")
                 .map((value, index) => {
                   return (
@@ -135,7 +135,7 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
                         }}
                         className={`h-25`}
                       >
-                        {startTime + index} H
+                        {setting?.startTime + index} H
                       </div>
                       <div className="flex justify-center align-center">
                         <div className="time">0</div>
@@ -165,7 +165,7 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
                       </div>
                     </div>
                   </div>
-                  {Array((endTime - startTime + 1) * 4)
+                  {Array((setting?.endTime - setting?.startTime + 1) * 4)
                     .fill("")
                     .map((value, index) => {
                       return (
@@ -185,7 +185,6 @@ const ReservationCalendar: React.FC<{}> = ({}) => {
               {events.map((event, index) => {
                 return (
                   <EventWrapper
-                    onClick={() => handleShowToolTip(event)}
                     key={index}
                     color={event.color}
                     top={event.top}

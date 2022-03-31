@@ -3,4 +3,5 @@ export interface ReservationModuleData {
   error: string;
   reservations: any;
   isRefresh: boolean;
+  activeDate: Date;
 }
